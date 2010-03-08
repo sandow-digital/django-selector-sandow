@@ -13,7 +13,7 @@ readme = open(path + '/README.rst', 'r').read()
 
 setup(name='django-selector',
       version=version,
-      description="port of luke arno's selector to django",
+      description="django urls helper based on wsgi selector",
       long_description=readme,
       classifiers=[
           'Development Status :: 4 - Beta',
