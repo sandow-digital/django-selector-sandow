@@ -1,29 +1,23 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-"""A Django "port" of Luke Arno's "Selector".
-
-To use, create an instance of Parser in your urls.py.  Parser has special
-implementations of the 'patterns' and 'url' functions that essentially
-parse pattern urls into regular expressions, and pass them to the builtin
-django functions.  Using pattern urls, your urls become more about _what_
-they are matching rather than about _how_ they are matching it:
+"""
+Django-Selector is a custom url pattern parser for Django whose API is based on
+`Luke Arno's Selector <http://lukearno.com/projects/selector/>`_ for WSGI.  It
+is designed to simplify the writing and reading of url patterns by providing
+recipes for frequently used patterns.  Django-Selector's parser ignores classic
+regex based url patterns, so if you require the flexibility of regexes you
+needn't jump through registration hoops for a one-off url pattern. Using these
+named patterns in your urls.py clarifies *what* they are matching as well as
+*how* they are matching it::
 
     patterns('foo.views',
-        (r'^/(?P<name>[a-zA-Z0-9\-]+)/(?P<foos>\d*.?\d+)/$', 'index', {}, 'foo-index')
+        (r'^/(?P<name>[a-zA-Z0-9\-]+)/(?P<foos>\d*.?\d+)/$', 'index', {}, 'foo-index'))
 
-becomes, via patterns:
+becomes::
 
-    parser.patterns('foo.views', (r'/{name:slug}/{foos:num}/', 'index', {}, 'foo-index'))
-
-In addition to the builtin patterns (check `pattern_types`), you may also
-register additional patterns to an instantiated parser in your URLs module,
-or subclass Parser and add them to use throughout your application.
-
-You can optionally end a smart pattern with '!' if you do not want to have
-the trailing $ appended (for use in application entry points).  To end with
-a literal '!', use '!!'.
-
-DSelector is distributed under the MIT license.
+    parser.patterns('foo.views',
+        (r'/{name:slug}/{foos:number}/', 'index', {}, 'foo-index'))
 """
 
 import re
@@ -54,6 +48,7 @@ re_template = r'(?P<%s>%s)'
 re_findstr  = r'{%(name)s:%(pattern)s}'
 
 class Parser:
+    """A parser that can process url patterns with named patterns in them."""
     def __init__(self, **extra_patterns):
         self.pattern_types = pattern_types.copy()
         for key, val in extra_patterns.iteritems():
@@ -84,7 +79,7 @@ class Parser:
         return pat
 
     def patterns(self, prefix, *args):
-        """A replacement 'patterns' that implements smart url groups."""
+        """A replacement 'patterns' that understands named patterns."""
         pattern_list = []
         for t in args:
             if isinstance(t, (list, tuple)):
@@ -95,7 +90,7 @@ class Parser:
         return pattern_list
 
     def url(self, regex, view, kwargs=None, name=None, prefix=''):
-        """A replacement for 'url' that understands smart url groups."""
+        """A replacement for 'url' that understands named patterns."""
         regex = self.parse_pattern(regex)
         return django_url(regex, view, kwargs, name, prefix)
 
