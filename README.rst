@@ -8,7 +8,7 @@ named patterns in your urls.py clarifies *what* they are matching as well as
 *how* they are matching it::
 
     patterns('foo.views',
-    (r'^/(?P<name>[a-zA-Z0-9\-]+)/(?P<foos>\d*.?\d+)/$', 'index', {}, 'foo-index')
+    (r'^/(?P<name>[a-zA-Z0-9\-]+)/(?P<foos>\d*.?\d+)/$', 'index', {}, 'foo-index'))
 
 becomes::
 
