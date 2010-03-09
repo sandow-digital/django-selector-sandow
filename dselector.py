@@ -32,7 +32,7 @@ pattern_types = {
     'word'      : r'\w+',
     'alpha'     : r'[a-zA-Z]+',
     'digits'    : r'\d+',
-    'number'    : r'\d*.?\d+',
+    'number'    : r'\d*\.?\d+',
     'chunk'     : r'[^/^.]+',
     'segment'   : r'[^/]+',
     'any'       : r'.*',

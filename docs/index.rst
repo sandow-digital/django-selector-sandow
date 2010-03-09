@@ -94,8 +94,8 @@ List of builtin named patterns
  word       ``r'\w+'``                       a single word
  alpha      ``r'[a-zA-Z]+'``                 alphabetic characters 
  digits     ``r'\d+'``                       digits
- number     ``r'\d*.?\d+'``                  float or integer numbers
- chunk      ``r'[^/^.]+'``                   a 'chunk' of text (no / or .)
+ number     ``r'\d*\.?\d+'``                 float or integer numbers
+ chunk      ``r'[^/^.]+'``                   a 'chunk' of text (no /, ^, or .)
  segment    ``r'[^/]+'``                     a url segment (between /'s)
  any        ``r'.*'``                        anything;  good for paths
  year       ``r'\d{4}'``                     a 4 digit number
