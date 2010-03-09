@@ -58,6 +58,10 @@ expression looking roughly like::
     '(?P<name>%s)' % (pattern_definition)
 
 Refer to the :ref:`pattern-list` for a description of all default patterns.
+You may optionally leave out the pattern, which will match against the
+``segment`` pattern::
+
+    (r'archive/{year}/{month:month}/{day}/', archive, {}, 'blog-day')
 
 In addition to translating the shorthand named-pattern syntax to regex,
 django-selector bookends your string with ``^`` and ``$``, as these are so
@@ -71,6 +75,7 @@ operates as the standard ``django.conf.urls.defaults.patterns``.
 
 .. autoclass:: dselector.Parser
 .. automethod:: dselector.Parser.patterns
+.. automethod:: dselector.Parser.url
 
 Defining your own named patterns
 --------------------------------
