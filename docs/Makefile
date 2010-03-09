@@ -93,3 +93,8 @@ distro: html
 	@echo "Pushing documents to http://dev.jmoiron.net/johnny/"
 	scp -r $(BUILDDIR)/html/* jmoiron@jmoiron.net:dev.jmoiron.net/django-selector/
 
+zip: html
+	@echo
+	@echo "Making zip file 'django-selector.zip'"
+	cd $(BUILDDIR)/html/; zip -r django-selector.zip *
+	mv $(BUILDDIR)/html/django-selector.zip .
