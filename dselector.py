@@ -21,12 +21,13 @@ becomes::
 """
 
 import re
-from django.conf.urls.defaults import url as django_url
+from django.conf.urls.defaults import *
+from django.conf.urls.defaults import url as _url, __all__ as defaults_all
 from django.core.urlresolvers import RegexURLPattern, RegexURLResolver
 
 import calendar
 
-__all__ = ['pattern_types', 'Parser']
+__all__ = ['pattern_types', 'Parser', 'parser'] + defaults_all
 
 pattern_types = {
     'word'      : r'\w+',
@@ -59,7 +60,7 @@ class Parser:
             from django.conf import settings
             default_autowrap = getattr(settings, 'SELECTOR_AUTOWRAP', True)
         except:
-            default_autowrap = True
+            default_autowrap = False
         self.autowrap = default_autowrap if autowrap is None else autowrap
         self.pattern_types = pattern_types.copy()
         for key, val in extra_patterns.iteritems():
@@ -107,5 +108,9 @@ class Parser:
     def url(self, regex, view, kwargs=None, name=None, prefix=''):
         """A replacement for 'url' that understands named patterns."""
         regex = self.parse_pattern(regex)
-        return django_url(regex, view, kwargs, name, prefix)
+        return _url(regex, view, kwargs, name, prefix)
 
+# instantiate Parser instance and expose default functions
+parser = Parser()
+url = parser.url
+patterns = parser.patterns
