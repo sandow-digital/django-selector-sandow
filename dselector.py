@@ -48,8 +48,19 @@ re_template = r'(?P<%s>%s)'
 re_findstr  = r'{%(name)s:%(pattern)s}'
 
 class Parser:
-    """A parser that can process url patterns with named patterns in them."""
-    def __init__(self, **extra_patterns):
+    """A parser that can process url patterns with named patterns in them.
+
+    *autowrap* defaults to True.  When it's ``False``, autowrapping of patterns
+    with ``^`` and ``$`` is disabled, and django-selector's parser should be
+    backwards compatible with regular django url definitions.  You can set the
+    default autowrap value with ``settings.SELECTOR_AUTOWRAP``."""
+    def __init__(self, autowrap=None, **extra_patterns):
+        try:
+            from django.conf import settings
+            default_autowrap = getattr(settings, 'SELECTOR_AUTOWRAP', True)
+        except:
+            default_autowrap = True
+        self.autowrap = default_autowrap if autowrap is None else autowrap
         self.pattern_types = pattern_types.copy()
         for key, val in extra_patterns.iteritems():
             self.pattern_types[key] = val
@@ -75,6 +86,10 @@ class Parser:
                 findstr = re_findstr % match
             replacement = re_template % (n, self.pattern_types[p])
             pat = pat.replace(findstr, replacement)
+        # if the pattenr starts with ^, ends with '$', return for compatibility
+        # if we have self.autowrap off, just return the pattern as is
+        if pat.startswith('^') or pat.endswith('$') or not self.autowrap:
+            return pat
         pat = ('^%s$' % pat) if not pat.endswith('!') else ('^%s' % pat[:-1])
         return pat
 

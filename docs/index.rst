@@ -63,15 +63,38 @@ You may optionally leave out the pattern, which will match against the
 
     (r'archive/{year}/{month:month}/{day}/', archive, {}, 'blog-day')
 
-In addition to translating the shorthand named-pattern syntax to regex,
-django-selector bookends your string with ``^`` and ``$``, as these are so
-often required that it is cleaner to assume they are implied.  When including
-another modules patterns (as in the ``admin`` example above), you may cancel
-the automatic ``$`` by adding a bang (``!``).  If for whatever reason you
-need a literal bang at the end of your url pattern, you may use ``!!``.
-
 Beyond these preprocessing steps, django-selector's ``parser.patterns``
 operates as the standard ``django.conf.urls.defaults.patterns``.
+
+Autowrapping
+~~~~~~~~~~~~
+
+In addition to translating the shorthand named-pattern syntax to regex,
+django-selector bookends your string with ``^`` and ``$``, as these are so
+often required that it is often cleaner to assume they are implied.  When 
+including another module's patterns (as in the ``admin`` example above), 
+you may cancel the automatic ``$`` by adding a bang (``!``).  If for you
+need a literal bang at the end of your url pattern, you may use ``!!``, but
+in this case you will not get the autowrapped ``$``.
+
+*New in django-selector 0.3*
+
+Because django-selector happily ignores regular expressions and only translates
+the named patterns it finds in the URL, it can be backwards compatible with
+django's default ``url`` and url formats.  However, because of the inescapable
+autowrapping, previous versions were not.  Versions >= ``0.3`` will now
+automatically avoid autowrapping *any* pattern that either starts with a ``^``
+*or* ends with a ``$``.
+
+This buys the default operation a lot of backwards compatibility, but still
+fails urls that are open-ended and lack a ``^`` at the begining.  To achieve
+full backwards compatibility create your Parser with *autowrap=False*::
+
+    parser = dselector.Parser(autowrap=False)
+
+Or add this setting to your ``settings.py``::
+
+    SELECTOR_AUTOWRAP=False
 
 .. autoclass:: dselector.Parser
 .. automethod:: dselector.Parser.patterns

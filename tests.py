@@ -58,4 +58,20 @@ class DselectorTest(unittest.TestCase):
         match = pat.match('/archives/humantorch/2001')
         self.failUnless(not match)
 
+    def test_autowrap(self):
+        """Tests for the autowrap functionality both on and off."""
+        parser = dselector.Parser() # autowrap on
+        compat = dselector.Parser(autowrap=False)
+        s1 = parser.parse_pattern('archives/{year}/{month}')
+        s2 = compat.parse_pattern('archives/{year}/{month}')
+        s3 = parser.parse_pattern('^archives/(?P<name>\w+)/')
+        s4 = compat.parse_pattern('^archives/(?P<name>\w+)/')
+        s5 = compat.parse_pattern('^archives/(?P<name>\w+)/$')
+        s6 = parser.parse_pattern('archives/{name:word}/')
+
+        self.failUnless(s1 == '^archives/(?P<year>[^/]+)/(?P<month>[^/]+)$')
+        self.failUnless(s2 == 'archives/(?P<year>[^/]+)/(?P<month>[^/]+)')
+        self.failUnless(s3 == '^archives/(?P<name>\\w+)/')
+        self.failUnless(s4 == s5[:-1])
+        self.failUnless(s5 == s6)
 
