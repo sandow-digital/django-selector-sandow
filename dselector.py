@@ -56,11 +56,14 @@ class Parser:
     backwards compatible with regular django url definitions.  You can set the
     default autowrap value with ``settings.SELECTOR_AUTOWRAP``."""
     def __init__(self, autowrap=None, **extra_patterns):
+        # note that the only way to get False here is to:
+        #  set SELECTOR_AUTOWRAP=False in settings.py
+        #  pass autowrap=False to Parser.__init__
         try:
             from django.conf import settings
             default_autowrap = getattr(settings, 'SELECTOR_AUTOWRAP', True)
         except:
-            default_autowrap = False
+            default_autowrap = True
         self.autowrap = default_autowrap if autowrap is None else autowrap
         self.pattern_types = pattern_types.copy()
         for key, val in extra_patterns.iteritems():
