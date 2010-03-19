@@ -20,7 +20,7 @@ You can install django-selector with pip::
     pip install django-selector
 
 You can fork django-selector `from its hg repository
-<http://dev.jmoiron.net/hg/django-selector>`_::
+<http://bitbucket.org/jmoiron/django-selector>`_::
 
     hg clone http://dev.jmoiron.net/hg/django-selector
 
