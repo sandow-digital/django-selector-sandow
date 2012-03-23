@@ -22,7 +22,8 @@ becomes::
 
 import re
 from django.conf.urls.defaults import *
-from django.conf.urls.defaults import url as _url, __all__ as defaults_all
+defaults_all = [handler403, handler404, handler500, include, patterns, url]
+from django.conf.urls.defaults import url as _url
 from django.core.urlresolvers import RegexURLPattern, RegexURLResolver
 
 import calendar
